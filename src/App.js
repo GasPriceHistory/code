@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import useGasData from './hooks/useGasData';
+import LineChartGas from './components/LineChart';
+import BarChartGas from './components/BarChart';
+import ChoroplethMap from './components/ChoroplethMap';
+import Header from './components/Header'; 
+import "./App.css"
 
-function App() {
+const App = () => {
+  const data = useGasData();
+  const provinces = [...new Set(data.map(d => d.province))].sort();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{  }}>
+      <Header />
+      <div style={{padding:35}}>
+      {data.length > 0 ? (
+        <>
+          <LineChartGas data={data} provinces={provinces} />
+          <hr style={{ height: '4px', backgroundColor: 'black', border: 'none' }} />
+          <ChoroplethMap data={data} provinces={provinces} />
+
+        </>
+      ) : (
+        <p>Loading data...</p>
+      )}
+    </div>
     </div>
   );
-}
+};
 
 export default App;
